@@ -5,43 +5,46 @@ const listlevels=[{id:Math.random(),levelNme:"CEO",datalevels:[{id:Math.random()
 ];
 const list = () => {
     const [listlevelsData,setlistlevelsData]=useState(listlevels)
-    const [listDatalevels,setlistDatalevels]= useState([])
+    const [listDatalevels,setlistDatalevels]= useState([listlevelsData[0]])
+    const [level,setlevel]=useState("")
     const [count,setcount]=useState(1)
     const handlechange =(e)=>{
         console.log(e.target.value)
-        if(count<listlevels.length){
+        const filt= listlevelsData.filter((el)=>el.datalevels)
+        console.log("count",count)
+        setlevel(e.target.value)
+        if(count<listlevelsData.length && e.target.value!=="0"){
             console.log(listlevelsData[count])
             setlistDatalevels([...listDatalevels,listlevelsData[count]])
             setcount(prevs=>prevs+1)
+            console.log(count)
         }
     }
     const filterLevels=(idlevels)=>{
+        console.log("filter",level)
         const newArr= listDatalevels.filter((datlev)=>datlev.id!==idlevels)
         setlistDatalevels(newArr)
         if(listDatalevels.length===1){
             setcount(1)
+            setlevel("0")
         }
     }
     console.log("listDatalevels",listDatalevels)
   return (
     <div style={{width:"800px",margin:"30px auto"}}>
-        <label  >{listlevelsData[0].levelNme}</label>
 
-<select name="pets" id="pet-select" onChange={handlechange}>
-    {listlevelsData[0].datalevels.map((level)=>{
-        return <option value={level.name} key={level.id}>{level.name}</option>
-    })}
-    
-</select>
         {
         listDatalevels.map((lev, i, arr) => {
-            if (arr.length - 1 === i) {
+            if (arr.length-1  === i) {
+                
+                console.log("length",arr.length)
                 return <div>
-                 <p onClick={()=>filterLevels(lev.id)}>x</p>
+                {arr.length===1 ?"" :<p onClick={()=>filterLevels(lev.id)}>x</p>}
                 <label  >{lev.levelNme}</label>
                 <select name="pets" id="pet-select" onChange={handlechange}>
+                <option value="0">select option</option>
         {lev.datalevels.map((level)=>{
-            return <option value={level.name} key={level.id}>{level.name}</option>
+            return <option value={level.id} key={level.id}>{level.name}</option>
         })}
         
     </select>
@@ -50,8 +53,9 @@ const list = () => {
                 return <>
                 <label  >{lev.levelNme}</label>
                 <select name="pets" id="pet-select" onChange={handlechange}>
+
         {lev.datalevels.map((level)=>{
-            return <option value={level.name} key={level.id}>{level.name}</option>
+            return <option value={level.id} key={level.id}>{level.name}</option>
         })}
     </select>
                 </>
